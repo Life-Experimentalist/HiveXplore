@@ -319,6 +319,26 @@ python db_manager.py stats
 python db_manager.py clear-sessions
 ```
 
+## Roadmap
+
+Nothing below is planned work. This was built for a hackathon, it does what it
+was built to do, and it is not under active development. The notes exist so a
+future visit — if there ever is one — does not have to rediscover them.
+
+- **The database does not survive a restart.** `database.py` writes
+  `hivebuzz.db` next to itself, and the free Render instance has an ephemeral
+  disk. Every stored preference and cached session is gone whenever the service
+  restarts or wakes from sleep. The fix is to read the path from an environment
+  variable and point it at a persistent volume, rather than hardcoding it
+  beside the module.
+
+- **The free instance sleeps.** Render idles a free web service after a stretch
+  of no traffic; the first request afterwards waited about half a minute when
+  last measured. A host that suspends to a persistent volume instead of wiping
+  the disk would settle the cold start and the database in the same move —
+  Fly.io works that way. Worth checking what its allowance actually is at the
+  time, because this project is a hobby build and is not worth paying for.
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
